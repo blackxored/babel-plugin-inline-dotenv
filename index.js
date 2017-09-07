@@ -11,6 +11,9 @@ module.exports = function (options) {
         if(t.isAssignmentExpression(path.parent) && path.parent.left == path.node) return;
         if (path.get("object").matchesPattern("process.env")) {
           if (!dotenv) {
+            if (state.opts.path && state.opts.path.indexOf('..') !== -1) {
+              state.opts.path = require('path').resolve(__dirname, state.opts.path);
+            }
             dotenv = require('dotenv').config(state.opts);
           }
           var key = path.toComputedKey();
